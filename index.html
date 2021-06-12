@@ -2,10 +2,13 @@
 <html>
 <head>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script type='text/javascript' src='config.js'></script>
 
-	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&key=AIzaSyAurlJVCB2xZaJPJG1DlkcnUemLSuCPPhk"></script>
+
 
 	<script>
+		var key1 = config.KEY_1;
+		var key2 = config.KEY_2;
 		var searchInput = 'search_input';
 
 $(document).ready(function () {
@@ -36,6 +39,7 @@ $(document).on('change', '#'+searchInput, function () {
     document.getElementById('longitude_view').innerHTML = '';
 });
 	</script>
+	<script src='https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&key='+key1></script>
 	<style>
 
 		label {
@@ -43,7 +47,7 @@ $(document).on('change', '#'+searchInput, function () {
     font: 1rem 'Fira Sans', sans-serif;
 }
 
-input,
+input{margin: .4rem 0;}
 label {
     margin: .4rem 0;
 }
@@ -61,28 +65,28 @@ label {
        min="2021-01-01" max="2022-12-31"> -->
        <br>
        <label for="order_id">Order Id:</label>
-	<input type="number" id="order_id" placeholder="Order ID"/>
+	<input size="50" type="number" id="order_id" placeholder="Order ID"/>
 	<label for="name">Customer's Name:</label>
-	<input type="text" id="name" placeholder="Customer Name"/>
+	<input size="50" type="text" id="name" placeholder="Customer Name"/>
 	<label for="mobile">Customer's Mobile number:</label>
-	<input type="phone" id="mobile" placeholder="Customer Mobile"/>
+	<input size="50" type="phone" id="mobile" placeholder="Customer Mobile"/>
 	<label for="email">Customer's email id:</label>
-	<input type="email" id="email" placeholder="Customer Email"/>
+	<input size="50" type="email" id="email" placeholder="Customer Email"/>
 	<!-- <label for="address">Customer's Address:</label>
-	<input type="text" id="address" placeholder="Customer Address"/><br> -->
+	<input size="50" type="text" id="address" placeholder="Customer Address"/><br> -->
 	<label for="pickup_datetime">Pickup Date and time:</label>
-	<input type="text" id="pickup_datetime" placeholder="Pickup Date and time"/><br>
+	<input  type="text" id="pickup_datetime" placeholder="Pickup Date and time"/><br>
 	<label for="delivery_datetime">Delivery Date and time:</label>
-	<input type="text" id="delivery_datetime" placeholder="Delivery Date and time"/><br>
+	<input  type="text" id="delivery_datetime" placeholder="Delivery Date and time"/><br>
 	<label>Customer's Address:</label>
-    <input type="text" id="search_input" placeholder="Type address..." />
-    <input type="hidden" id="loc_lat" />
-    <input type="hidden" id="loc_long" />
+    <input size="50" type="text" id="search_input" placeholder="Type address..." />
+    <input size="50" type="hidden" id="loc_lat" />
+    <input size="50" type="hidden" id="loc_long" />
     <div class="latlong-view">
     <p><b>Latitude:</b> <span id="latitude_view"></span></p>
     <p><b>Longitude:</b> <span id="longitude_view"></span></p>
 </div>
-	<input type="submit" value="Add Todo"/>	
+	<input size="50" type="submit" value="Create Task"/>	
 	<script>
   var today = new Date();
 var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
@@ -119,7 +123,7 @@ var dateTime2 = date+' '+time2;
 		fetch("https://api.tookanapp.com/v2/create_task/",{
 			method:'POST',
 			body:JSON.stringify({
-				api_key:"5b6a6787f14b4a195e116765555b25401ee6ccfc2cdc7a365b1f06",
+				api_key:key2,
 				order_id:order_id,
 				team_id:"All Teams",
 				auto_assignment:"0",
