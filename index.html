@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&key=AIzaSyAurlJVCB2xZaJPJG1DlkcnUemLSuCPPhk"></script>
+
+	<script>
+		var searchInput = 'search_input';
+
+$(document).ready(function () {
+    var autocomplete;
+    autocomplete = new google.maps.places.Autocomplete((document.getElementById(searchInput)), {
+        types: ['geocode'],
+        componentRestrictions: {
+        country: "IN",
+
+    },
+    //fields:["ChIJARFGZy6_wjsRQ-Oenb9DjYI"],
+    });
+	
+    google.maps.event.addListener(autocomplete, 'place_changed', function () {
+        var near_place = autocomplete.getPlace();
+        document.getElementById('loc_lat').value = near_place.geometry.location.lat();
+        document.getElementById('loc_long').value = near_place.geometry.location.lng();
+		
+        document.getElementById('latitude_view').innerHTML = near_place.geometry.location.lat();
+        document.getElementById('longitude_view').innerHTML = near_place.geometry.location.lng();
+    });
+});
+$(document).on('change', '#'+searchInput, function () {
+    document.getElementById('latitude_input').value = '';
+    document.getElementById('longitude_input').value = '';
+	
+    document.getElementById('latitude_view').innerHTML = '';
+    document.getElementById('longitude_view').innerHTML = '';
+});
+	</script>
+	<style>
+
+		label {
+    display: block;
+    font: 1rem 'Fira Sans', sans-serif;
+}
+
+input,
+label {
+    margin: .4rem 0;
+}
+	</style>
+	<title>
+		Kalinga - Tookan Integration
+	</title>
+</head>
+<body align="center">
+<form id="form" method="post" >
+	<!-- <label for="start">Start date:</label>
+
+<input type="date" id="start" name="trip-start"
+       value="2018-07-22"
+       min="2021-01-01" max="2022-12-31"> -->
+       <br>
+       <label for="order_id">Order Id:</label>
+	<input type="number" id="order_id" placeholder="Order ID"/>
+	<label for="name">Customer's Name:</label>
+	<input type="text" id="name" placeholder="Customer Name"/>
+	<label for="mobile">Customer's Mobile number:</label>
+	<input type="phone" id="mobile" placeholder="Customer Mobile"/>
+	<label for="email">Customer's email id:</label>
+	<input type="email" id="email" placeholder="Customer Email"/>
+	<!-- <label for="address">Customer's Address:</label>
+	<input type="text" id="address" placeholder="Customer Address"/><br> -->
+	<label for="pickup_datetime">Pickup Date and time:</label>
+	<input type="text" id="pickup_datetime" placeholder="Pickup Date and time"/><br>
+	<label for="delivery_datetime">Delivery Date and time:</label>
+	<input type="text" id="delivery_datetime" placeholder="Delivery Date and time"/><br>
+	<label>Customer's Address:</label>
+    <input type="text" id="search_input" placeholder="Type address..." />
+    <input type="hidden" id="loc_lat" />
+    <input type="hidden" id="loc_long" />
+    <div class="latlong-view">
+    <p><b>Latitude:</b> <span id="latitude_view"></span></p>
+    <p><b>Longitude:</b> <span id="longitude_view"></span></p>
+</div>
+	<input type="submit" value="Add Todo"/>	
+	<script>
+  var today = new Date();
+var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+var time = today.getHours() + ":" + (today.getMinutes()+2) +":" + today.getSeconds();
+var time2 = today.getHours() + ":" + (today.getMinutes()+20) + ":" + today.getSeconds();
+
+var dateTime = date+' '+time;
+var dateTime2 = date+' '+time2;
+  document.getElementById("pickup_datetime").value = dateTime;
+  document.getElementById("delivery_datetime").value = dateTime2;
+</script>
+
+</form>
+
+<div id="results"> 
+</div>
+</body>
+<script>
+	var form=document.getElementById('form')
+	form.addEventListener('submit',function(e){
+		//prevent auto submission of the form
+		e.preventDefault()
+
+		var name=document.getElementById('name').value
+		var email=document.getElementById('email').value
+		var order_id=document.getElementById('order_id').value
+		var address=document.getElementById('search_input').value
+		var mobile=document.getElementById('mobile').value
+		var pt=document.getElementById("pickup_datetime").value
+		var dt=document.getElementById("delivery_datetime").value
+
+		//fetch post request
+
+		fetch("https://api.tookanapp.com/v2/create_task/",{
+			method:'POST',
+			body:JSON.stringify({
+				api_key:"5b6a6787f14b4a195e116765555b25401ee6ccfc2cdc7a365b1f06",
+				order_id:order_id,
+				team_id:"All Teams",
+				auto_assignment:"0",
+		        job_description:"Food delivery",
+		        job_pickup_phone:"+918888854805",
+		        job_pickup_name:"Kalinga Restaurant",
+		        job_pickup_email:"",
+		        job_pickup_address:"Kalinga Veg Gourmet Kitchen, House Of Nosh, Gulawani Maharaj Road, Swaroop Society, Vakil Nagar, Erandwane, Pune, Maharashtra",
+		        job_pickup_latitude:"18.508133980983146",
+		        job_pickup_longitude:"73.83510190067744",
+		        job_pickup_datetime:pt,
+        		customer_email:email,
+        		customer_username:name,
+		        customer_phone:mobile,
+		        customer_address:address,
+		        job_delivery_datetime:dt,
+		        custom_field_template:"Order Details",
+		        meta_data: [{"label":"Price","data":"100"},{"label":"Quantity","data":"100"}],
+		        timezone:"-330",
+		        has_pickup:"1",
+		        has_delivery:"1",
+		        layout_type:"0",
+		        tracking_link:1,
+		        pickup_custom_field_template:"Order Details",
+		        pickup_meta_data: [{"label":"Price","data":"100"},{"label":"Quantity","data":"100"}],
+		        fleet_id:"",
+		        p_ref_images: ["http://tookanapp.com/wp-content/uploads/2015/11/logo_dark.png","http://tookanapp.com/wp-content/uploads/2015/11/logo_dark.png"],
+		        "ref_images": ["http://tookanapp.com/wp-content/uploads/2015/11/logo_dark.png","http://tookanapp.com/wp-content/uploads/2015/11/logo_dark.png"],
+		        notify:1,
+		        tags:"",
+		        geofence:1,
+		        ride_type:0
+				
+			}),
+			headers:{
+				"Content-Type":"application/json; charset=UTF-8"
+			}
+		}).then(function(response){
+			return response.json()
+		}).then(function(data){
+			console.log(data)
+			var results=document.getElementById('results')
+			results.innerHTML=`<p>${data.message}<p>
+			<p>Pickup Tracking Link is ${data.data.pickup_tracking_link}<p>
+			<p>Delivery Link is ${data.data.delivery_tracing_link}<p>`
+		})
+	})
+
+</script>
+</html>
